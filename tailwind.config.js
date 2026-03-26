@@ -34,8 +34,8 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['Plus Jakarta Sans', 'sans-serif'],
-        display: ['Syne', 'sans-serif'],
+        sans: ['var(--font-plus-jakarta)', 'sans-serif'],
+        display: ['var(--font-syne)', 'sans-serif'],
       },
       animation: {
         'fade-up':    'fadeUp 0.3s ease forwards',

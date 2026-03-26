@@ -4,7 +4,22 @@
 // ══════════════════════════════════════════════════════════════
 
 import type { Metadata } from 'next';
+import { Plus_Jakarta_Sans, Syne } from 'next/font/google';
 import './globals.css';
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700', '800'],
+  variable: '--font-plus-jakarta',
+  display: 'swap',
+});
+
+const syne = Syne({
+  subsets: ['latin'],
+  weight: ['700', '800'],
+  variable: '--font-syne',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'HAKIKU — Solusi Pendaftaran HAKI yang Lebih Cerdas dan Pasti',
@@ -29,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id">
+    <html lang="id" className={`${plusJakarta.variable} ${syne.variable}`}>
       <body>
         {children}
       </body>
