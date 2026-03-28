@@ -12,7 +12,6 @@ import { usePathname } from 'next/navigation';
 const NAV_ITEMS = [
   { href: '/',            label: 'Beranda'    },
   { href: '/diagnosis',   label: 'Diagnosis'  },
-  { href: '/hasil',       label: 'Hasil'      },
   { href: '/konsultasi',  label: 'Konsultasi' },
   { href: '/dashboard',   label: 'Dashboard'  },
   { href: '/dokumen',     label: 'Dokumen'    },
