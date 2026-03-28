@@ -4,7 +4,7 @@
 // ══════════════════════════════════════════════════════════════
 
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, Syne } from 'next/font/google';
+import { Plus_Jakarta_Sans, Montserrat } from 'next/font/google';
 import './globals.css';
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -14,10 +14,10 @@ const plusJakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
-const syne = Syne({
+const montserrat = Montserrat({
   subsets: ['latin'],
-  weight: ['700', '800'],
-  variable: '--font-syne',
+  weight: ['700', '800', '900'],
+  variable: '--font-montserrat',
   display: 'swap',
 });
 
@@ -44,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className={`${plusJakarta.variable} ${syne.variable}`}>
+    <html lang="id" className={`${plusJakarta.variable} ${montserrat.variable}`}>
       <body>
         {children}
       </body>

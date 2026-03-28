@@ -35,7 +35,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['var(--font-plus-jakarta)', 'sans-serif'],
-        display: ['var(--font-syne)', 'sans-serif'],
+        display: ['var(--font-montserrat)', 'sans-serif'],
       },
       animation: {
         'fade-up':    'fadeUp 0.3s ease forwards',
