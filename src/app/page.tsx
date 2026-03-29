@@ -18,8 +18,8 @@ const STATS = [
 const HOW_STEPS = [
   { step: '1', title: 'Diagnosis',     sub: 'AI analisis jenis HAKI yang tepat' },
   { step: '2', title: 'Cek Database',  sub: 'Deteksi kemiripan di PDKI DJKI' },
-  { step: '3', title: 'Siapkan Dok',   sub: 'Panduan dokumen step-by-step' },
-  { step: '4', title: 'Daftar DJKI',   sub: 'Submit & ikuti 10 langkah resmi' },
+  { step: '3', title: 'Siapkan Dokumen',   sub: 'Panduan dokumen lengkap langkah demi langkah' },
+  { step: '4', title: 'Daftar DJKI',   sub: 'Daftarkan & ikuti 10 langkah resmi' },
 ];
 
 const TESTIMONIALS = [
@@ -34,7 +34,7 @@ const TESTIMONIALS = [
     initial: 'R',
     gradient: 'linear-gradient(135deg,#059669,#34D399)',
     name: 'Reza — Kreator Digital Bandung',
-    location: 'Bandung · Illustrator & Desainer Grafis',
+    location: 'Bandung · Ilustrator & Desainer Grafis',
     text: '"Fitur cek database membuat saya tahu logo aman sebelum bayar biaya pendaftaran. Hemat waktu dan terhindar dari risiko penolakan!"',
   },
 ];
@@ -54,7 +54,7 @@ export default function LandingPage() {
             </span>
 
             <h1 className="font-display text-2xl text-white leading-snug mb-2">
-              Daftarkan HAKI Kamu<br/>
+              Daftarkan HAKI Anda<br/>
               <span style={{ color: '#FED7AA' }}>Lebih Cerdas & Pasti!</span>
             </h1>
 
@@ -110,7 +110,7 @@ export default function LandingPage() {
 
         {/* ── Persona Cards ──────────────────────────────────── */}
         <div className="px-4 pt-4 pb-0">
-          <p className="sect-label">Pilih Kategori Karya Kamu</p>
+          <p className="sect-label">Pilih Kategori Karya Anda</p>
           <div className="grid grid-cols-3 gap-2">
             {[
               { icon: '🪡', label: 'Kriya &\nKerajinan' },
@@ -153,7 +153,7 @@ export default function LandingPage() {
                   <div className="text-xs font-extrabold text-slate-800">{t.name}</div>
                   <div className="text-[10px] text-slate-400">{t.location}</div>
                 </div>
-                <div className="ml-auto text-yellow-400 text-xs">★★★★★</div>
+                <div className="ml-auto flex flex-col items-end gap-0.5"><div className="text-yellow-400 text-xs">★★★★★</div><span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full">✓ Terverifikasi</span></div>
               </div>
             </div>
           ))}

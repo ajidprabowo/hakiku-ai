@@ -176,18 +176,10 @@ export default function EdukasiPage() {
 
           return (
             <div key={sec}>
-              {filter === 'semua' && (
-                <div className="px-4 pt-3 pb-1.5 text-[10px] font-extrabold uppercase tracking-widest"
-                     style={{ color: SECTION_COLORS[sec] ?? '#1B4FD8' }}>
-                  {SECTION_LABELS[sec]}
-                </div>
-              )}
-              {filter !== 'semua' && (
-                <div className="px-4 pt-3 pb-1.5 text-[10px] font-extrabold uppercase tracking-widest"
-                     style={{ color: SECTION_COLORS[sec] ?? '#1B4FD8' }}>
-                  {SECTION_LABELS[sec]}
-                </div>
-              )}
+              <div className="px-4 pt-3 pb-1.5 text-[10px] font-extrabold uppercase tracking-widest"
+                   style={{ color: SECTION_COLORS[sec] ?? '#1B4FD8' }}>
+                {SECTION_LABELS[sec]}
+              </div>
 
               {mods.map(m => (
                 <div key={m.id} className="mx-4 mb-2 bg-white border border-slate-200 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:border-blue-400 hover:shadow-brand hover:-translate-y-px"

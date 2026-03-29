@@ -100,7 +100,7 @@ export default function HasilPage() {
           <div className="grid grid-cols-2 gap-2">
             {[
               { label: 'Biaya UMKM', value: isKriya ? 'Rp 200rb + Rp 250rb' : 'Rp 200.000' },
-              { label: 'Estimasi Proses', value: isKriya ? '9–14 hr (HC)' : '9–14 hari kerja' },
+              { label: 'Estimasi Proses', value: isKriya ? '9–14 Hari Kerja' : '9–14 hari kerja' },
               { label: 'Masa Berlaku', value: 'Seumur hidup + 70 thn' },
               { label: 'Dasar Hukum', value: 'PP No. 45/2024' },
             ].map(({ label, value }) => (

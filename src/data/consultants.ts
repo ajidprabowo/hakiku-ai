@@ -45,5 +45,5 @@ export const CONSULTANTS: Consultant[] = [
 export const CONSULTATION_PRICING = {
   chat:   { label: 'Chat',       price: 'Gratis',      free: true  },
   video:  { label: 'Video Call', price: 'Rp 49.000',   free: false },
-  review: { label: 'Review Dok', price: 'Rp 79.000',   free: false },
+  review: { label: 'Review Dokumen', price: 'Rp 79.000',   free: false },
 };

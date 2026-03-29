@@ -24,10 +24,11 @@ const DOC_TYPES = [
 
 export default function KonsultasiPage() {
   const [tab, setTab] = useState<KonsultasiTab>('chat');
+  const [hasDiagnosis] = useState(() => typeof window !== 'undefined' && !!sessionStorage.getItem('diagnosisResult'));
 
   // Chat state
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: 'ai', text: 'Halo! Saya HAKIKU AI 👋 Saya siap menjawab semua pertanyaan kamu seputar HAKI — biaya, proses, jenis HAKI, tips lolos, dan banyak lagi. Apa yang ingin kamu tanyakan?' },
+    { role: 'ai', text: 'Halo! Saya HAKIKU AI 👋 Saya siap menjawab semua pertanyaan Anda seputar HAKI — biaya, proses, jenis HAKI, tips lolos, dan banyak lagi. Apa yang ingin Anda tanyakan?' },
     { role: 'ai', text: '💬 Coba tanyakan: "Berapa biaya merek UMKM?", "Berapa lama proses hak cipta?", atau "Apa beda hak cipta dan merek?"' },
   ]);
   const [chatInput, setChatInput]   = useState('');
@@ -69,13 +70,13 @@ export default function KonsultasiPage() {
       const data = await res.json();
       setMessages(m => [...m, { role: 'ai', text: data.reply || data.error || 'Tidak ada respons.' }]);
     } catch {
-      setMessages(m => [...m, { role: 'ai', text: '❌ Gagal terhubung ke AI. Pastikan kamu online dan coba lagi.' }]);
+      setMessages(m => [...m, { role: 'ai', text: '❌ Gagal terhubung ke AI. Pastikan Anda terhubung ke internet dan coba lagi.' }]);
     } finally {
       setIsTyping(false);
     }
   }
 
-  // ── Review dokumen dengan Gemini ────────────────────────────
+  // ── Review dokumen dengan AI ────────────────────────────
   async function handleReview() {
     if (!reviewFile || reviewing) return;
     setReviewing(true);
@@ -90,7 +91,7 @@ export default function KonsultasiPage() {
       const data = await res.json();
       setReviewResult(data.result || data.error || 'Tidak ada hasil review.');
     } catch {
-      setReviewResult('❌ Review gagal. Pastikan kamu online dan coba lagi.');
+      setReviewResult('❌ Review gagal. Pastikan Anda terhubung ke internet dan coba lagi.');
     } finally {
       setReviewing(false);
     }
@@ -110,13 +111,13 @@ export default function KonsultasiPage() {
               💬 Konsultasi HAKI
             </span>
             <h1 className="font-display text-xl text-white font-bold mb-1">Tanya Ahli HAKI Berlisensi</h1>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.8)' }}>Pilih mode konsultasi sesuai kebutuhan kamu</p>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.8)' }}>Pilih mode konsultasi sesuai kebutuhan Anda</p>
           </div>
         </div>
 
         {/* ── Tabs ──────────────────────────────────────────── */}
         <div className="flex gap-px mx-4 mt-3 rounded-xl overflow-hidden flex-shrink-0 border border-slate-200">
-          {([['chat','🤖 Chat AI'],['human','👤 Konsultan'],['review','📄 Review Dok']] as [KonsultasiTab, string][]).map(([t, lbl]) => (
+          {([['chat','🤖 Chat AI'],['human','👤 Konsultan'],['review','📄 Review Dokumen']] as [KonsultasiTab, string][]).map(([t, lbl]) => (
             <button key={t} onClick={() => setTab(t)}
                     className={[
                       'flex-1 py-2 text-[11px] font-bold transition-all duration-150 border-none cursor-pointer font-sans',
@@ -140,7 +141,7 @@ export default function KonsultasiPage() {
                  style={{ background: 'linear-gradient(135deg,#1B4FD8,#2563EB,#F97316)' }}>
               <span className="text-xl">🤖</span>
               <div className="flex-1">
-                <div className="text-xs font-extrabold text-white">HAKIKU AI — Powered by Gemini</div>
+                <div className="text-xs font-extrabold text-white">HAKIKU AI — Powered by AI</div>
                 <div className="text-[10px]" style={{ color: 'rgba(255,255,255,0.75)' }}>Gratis · Respons instan · Siap 24/7</div>
               </div>
               <span className="px-2 py-0.5 rounded-full text-[10px] font-bold"
@@ -202,10 +203,12 @@ export default function KonsultasiPage() {
         ══════════════════════════════════════════════════════ */}
         {tab === 'human' && (
           <div className="flex-1 screen-container pb-2">
-            <div className="info-green mx-4 mt-3">
-              <div className="text-[11px] font-extrabold text-emerald-700 mb-0.5">✅ Briefing otomatis terkirim</div>
-              <div className="text-[11px] text-slate-500">Hasil diagnosis kamu sudah dikirim ke konsultan sebagai konteks awal.</div>
-            </div>
+            {hasDiagnosis && (
+              <div className="info-green mx-4 mt-3">
+                <div className="text-[11px] font-extrabold text-emerald-700 mb-0.5">✅ Briefing otomatis terkirim</div>
+                <div className="text-[11px] text-slate-500">Hasil diagnosis Anda sudah dikirim ke konsultan sebagai konteks awal.</div>
+              </div>
+            )}
 
             {CONSULTANTS.map((k) => (
               <div key={k.name} className="mx-4 mb-3 bg-white border border-slate-200 rounded-xl overflow-hidden"
@@ -246,8 +249,9 @@ export default function KonsultasiPage() {
                           style={{ background: 'linear-gradient(135deg,#1B4FD8,#3B82F6)' }}>
                     💬 Chat Sekarang
                   </button>
-                  <button className="flex-1 py-2 rounded-xl text-[11px] font-extrabold text-orange-700 bg-orange-50 hover:bg-orange-100">
+                  <button className="flex-1 py-2 rounded-xl text-[11px] font-extrabold text-orange-700 bg-orange-50 hover:bg-orange-100 relative">
                     📹 Video Call
+                    <span className="absolute -top-2 -right-1 text-[8px] font-black bg-amber-400 text-white px-1.5 py-0.5 rounded-full">Segera</span>
                   </button>
                 </div>
               </div>
@@ -261,9 +265,9 @@ export default function KonsultasiPage() {
         {tab === 'review' && (
           <div className="flex-1 screen-container px-4 pb-4">
             <div className="card mt-3">
-              <div className="text-sm font-extrabold text-slate-800 mb-1">📄 Review Dokumen oleh AI Gemini</div>
+              <div className="text-sm font-extrabold text-slate-800 mb-1">📄 Review Dokumen oleh AI HAKIKU</div>
               <div className="text-xs text-slate-500 leading-relaxed mb-4">
-                Upload dokumen HAKI kamu (PDF, JPG, PNG) untuk direview langsung oleh AI.
+                Unggah dokumen HAKI Anda (PDF, JPG, PNG) untuk direview langsung oleh AI.
                 AI akan menganalisis kelengkapan dan memberikan rekomendasi perbaikan.
               </div>
 
@@ -278,7 +282,14 @@ export default function KonsultasiPage() {
               {/* Upload zone */}
               <input ref={reviewInputRef} type="file" className="hidden"
                      accept=".pdf,.jpg,.jpeg,.png"
-                     onChange={e => setReviewFile(e.target.files?.[0] ?? null)} />
+                     onChange={e => {
+                       const f = e.target.files?.[0] ?? null;
+                       if (f && f.size > 10 * 1024 * 1024) {
+                         alert('Ukuran file melebihi 10 MB. Silakan pilih file yang lebih kecil.');
+                         return;
+                       }
+                       setReviewFile(f);
+                     }} />
               <div
                 onClick={() => reviewInputRef.current?.click()}
                 className={`upload-zone ${reviewFile ? 'filled' : ''}`}>
@@ -295,7 +306,7 @@ export default function KonsultasiPage() {
                 ) : (
                   <>
                     <div className="text-3xl mb-2">📁</div>
-                    <div className="text-xs font-bold text-blue-700">Klik untuk Upload Dokumen</div>
+                    <div className="text-xs font-bold text-blue-700">Klik untuk Mengunggah Dokumen</div>
                     <div className="text-[10px] text-slate-400 mt-1">PDF, JPG, PNG · Maks 10MB</div>
                   </>
                 )}
@@ -304,7 +315,7 @@ export default function KonsultasiPage() {
               {reviewFile && (
                 <button onClick={handleReview} disabled={reviewing}
                         className="btn-blue mt-3 disabled:opacity-60">
-                  {reviewing ? '⏳ AI Sedang Mereview...' : '🔍 Review dengan AI Gemini'}
+                  {reviewing ? '⏳ AI Sedang Menganalisis Dokumen...' : '🔍 Analisis Dokumen dengan AI'}
                 </button>
               )}
             </div>
@@ -316,7 +327,7 @@ export default function KonsultasiPage() {
                 <div className="flex items-center gap-2 px-4 py-3"
                      style={{ background: 'linear-gradient(135deg,#1B4FD8,#F97316)' }}>
                   <span className="text-base">🤖</span>
-                  <span className="text-xs font-extrabold text-white">Hasil Review AI Gemini</span>
+                  <span className="text-xs font-extrabold text-white">Hasil Analisis Dokumen AI</span>
                 </div>
                 <div className="p-4 bg-white">
                   {reviewing ? (

@@ -111,7 +111,7 @@ export default function DiagnosisPage() {
                 Platform ini melayani <strong>2 kategori karya</strong>:<br />
                 📌 <strong>Kriya & Kerajinan</strong> — batik, tenun, keramik, anyaman, ukiran<br />
                 📌 <strong>Desain Grafis & Visual</strong> — logo, ilustrasi, poster, kemasan<br /><br />
-                Pilih kategori karya yang ingin kamu lindungi:
+                Pilih kategori karya yang ingin Anda lindungi:
               </div>
             </div>
             <div className="grid grid-cols-2 gap-2 px-4 mt-1">
@@ -137,8 +137,8 @@ export default function DiagnosisPage() {
             <div className="px-4 pt-4 pb-2 flex gap-2.5">
               <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-black text-white" style={{ background: 'linear-gradient(135deg,#1B4FD8,#F97316)' }}>AI</div>
               <div className="bubble-bot">
-                Bagus! Kamu memilih <strong>{category}</strong> 🎉<br /><br />
-                Sekarang cek apakah nama merek atau karya kamu sudah ada di{' '}
+                Bagus! Anda memilih <strong>{category}</strong> 🎉<br /><br />
+                Sekarang cek apakah nama merek atau karya Anda sudah ada di{' '}
                 <strong>database PDKI DJKI</strong> (57 data). Ketik nama merek/karya:
               </div>
             </div>
@@ -185,7 +185,7 @@ export default function DiagnosisPage() {
           <div className="animate-fade-up page-enter">
             <div className="px-4 pt-4 pb-2 flex gap-2.5">
               <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-black text-white" style={{ background: 'linear-gradient(135deg,#1B4FD8,#F97316)' }}>AI</div>
-              <div className="bubble-bot">Apa <strong>tujuan utama</strong> kamu mendaftarkan HAKI ini?</div>
+              <div className="bubble-bot">Apa <strong>tujuan utama</strong> Anda mendaftarkan HAKI ini?</div>
             </div>
             <div className="grid grid-cols-2 gap-2 px-4 mt-1">
               {[
@@ -245,7 +245,7 @@ export default function DiagnosisPage() {
               <div className="grid grid-cols-2 gap-2">
                 {[
                   { label: 'Biaya UMKM',     value: isKriya ? 'Rp 200rb + Rp 250rb' : 'Rp 200.000' },
-                  { label: 'Est. Proses',    value: isKriya ? '9–14 hr (HC)' : '9–14 hari kerja' },
+                  { label: 'Estimasi Proses',    value: isKriya ? '9–14 Hari Kerja' : '9–14 hari kerja' },
                   { label: 'Masa Berlaku',   value: 'Seumur hidup + 70 thn' },
                   { label: 'Dasar Hukum',    value: 'PP No. 45/2024' },
                 ].map(({ label, value }) => (

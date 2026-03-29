@@ -7,7 +7,7 @@ import BottomNav from '@/components/BottomNav';
 const HKI_PORTFOLIO = [
   { icon: '™️', bg: '#ECFDF5', type: 'Merek Dagang · Kelas 25',      name: 'BatikSari',                          exp: 'Terdaftar 12 Jan 2024 · s/d Jan 2034',    badge: 'badge-green',  status: 'Aktif'  },
   { icon: '©️', bg: '#EEF3FF', type: 'Hak Cipta · Seni Terapan',     name: 'Koleksi Motif Parang Modern 2024',   exp: 'Terdaftar 3 Mar 2024 · Seumur hidup',     badge: 'badge-green',  status: 'Aktif'  },
-  { icon: '📋', bg: '#FFF0E0', type: 'Hak Cipta · Dokumen Disiapkan', name: 'Koleksi Motif Kawung Kontemporer',   exp: 'Mulai 18 Mar 2026 · Selesaikan dok →',    badge: 'badge-amber',  status: 'Proses' },
+  { icon: '📋', bg: '#FFF0E0', type: 'Hak Cipta · Dokumen Disiapkan', name: 'Koleksi Motif Kawung Kontemporer',   exp: 'Mulai 18 Mar 2026 · Selesaikan dokumen →',    badge: 'badge-amber',  status: 'Proses' },
 ];
 
 export default function DashboardPage() {
@@ -21,7 +21,7 @@ export default function DashboardPage() {
           <div className="text-[11px] font-bold mb-1" style={{ color: 'rgba(255,255,255,0.65)' }}>Selamat datang kembali 👋</div>
           <div className="font-display text-xl font-black text-white mb-3">Sari — BatikSari Studio</div>
           <div className="grid grid-cols-3 gap-2">
-            {[['3','HAKI Aktif'],['1','Dok. Disiapkan'],['0','Akan Expired']].map(([n,l])=>(
+            {[['3','HAKI Aktif'],['1','Dokumen Disiapkan'],['0','Akan Expired']].map(([n,l])=>(
               <div key={l} className="rounded-xl p-2.5 text-center" style={{ background: 'rgba(255,255,255,0.13)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.2)' }}>
                 <div className="font-display text-2xl font-black text-white">{n}</div>
                 <div className="text-[9px] font-bold mt-0.5 leading-tight" style={{ color: 'rgba(255,255,255,0.65)' }}>{l}</div>
@@ -53,7 +53,7 @@ export default function DashboardPage() {
           <p className="sect-label">Saran AI HAKIKU</p>
           {[
             { icon: '🌍', t: 'Ekspansi ke ASEAN via Madrid Protocol', s: 'Merek aktif — lindungi di Singapura & Malaysia' },
-            { icon: '📚', t: 'Lanjutkan Modul Edukasi', s: 'Kamu sudah 21% — selesaikan Modul 3 tentang Nilai HAKI' },
+            { icon: '📚', t: 'Lanjutkan Modul Edukasi', s: 'Anda sudah 21% — selesaikan Modul 3 tentang Nilai HAKI' },
           ].map(a => (
             <div key={a.t} className="flex gap-2.5 items-center mx-0 mb-2 px-3 py-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all duration-150">
               <span className="text-lg">{a.icon}</span>

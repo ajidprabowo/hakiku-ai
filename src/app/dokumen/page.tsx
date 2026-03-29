@@ -17,18 +17,18 @@ const DOCS: DocItem[] = [
   { id: 2, title: 'File Karya (Foto/Scan Min. 300 dpi)',  hint: 'Format JPG/PNG/PDF, bebas watermark. Desain Industri: foto dari 6 sudut pandang', required: true },
   { id: 3, title: 'Surat Pernyataan Kepemilikan Karya',   hint: 'Bermaterai Rp 10.000. Template resmi tersedia — bisa diisi dan diunduh langsung', required: true },
   { id: 4, title: 'Deskripsi Karya & Jenis Ciptaan',      hint: 'Judul karya, tanggal penciptaan, kategori DJKI (Seni Rupa / Seni Terapan / Sinematografi)', required: true },
-  { id: 5, title: 'Akun Portal DJKI + Kode Billing',       hint: 'Daftar di e-hakcipta.dgip.go.id → Permohonan Baru → Generate Billing → Bayar sbl 23.59', required: false },
+  { id: 5, title: 'Akun Portal DJKI + Kode Billing',       hint: 'Daftar di e-hakcipta.dgip.go.id → Permohonan Baru → Generate Billing → Bayar sebelum pukul 23.59', required: false },
 ];
 
 const STEPS = [
   { num: 1, title: 'Tentukan jenis HAKI yang akan didaftarkan',   phase: 'prep',   body: 'Identifikasi kebutuhan: <b>Hak Cipta</b> untuk karya seni/desain, <b>Desain Industri</b> untuk tampilan produk fisik, <b>Merek</b> untuk brand/nama dagang. Ketiganya bisa didaftarkan bersamaan untuk perlindungan berlapis.' },
   { num: 2, title: 'Siapkan dokumen identitas pemohon',            phase: 'prep',   body: 'Perorangan: scan KTP/Paspor. UMKM: tambah Surat Pernyataan UMK bermaterai Rp 10.000 untuk <b>tarif lebih hemat 70%</b>.' },
-  { num: 3, title: 'Siapkan dokumentasi karya secara lengkap',     phase: 'prep',   body: 'Foto/scan karya resolusi <b>min. 300 dpi</b> (JPG/PNG/PDF). Desain Industri: foto dari <b>6 sudut</b> (depan, belakang, kiri, kanan, atas, bawah). Belum dipublikasi >6 bulan untuk DI.' },
-  { num: 4, title: 'Buat akun di portal DJKI yang sesuai',         phase: 'online', body: '<b>Hak Cipta:</b> e-hakcipta.dgip.go.id &nbsp;|&nbsp; <b>Merek:</b> merek.dgip.go.id &nbsp;|&nbsp; <b>DI:</b> dgip.go.id<br/>⚠️ <b>JANGAN gunakan VPN/proxy</b> — sistem DJKI bisa error!' },
+  { num: 3, title: 'Siapkan dokumentasi karya secara lengkap',     phase: 'prep',   body: 'Foto/scan karya resolusi <b>min. 300 dpi</b> (JPG/PNG/PDF). Desain Industri: foto dari <b>6 sudut</b> (depan, belakang, kiri, kanan, atas, bawah). Belum dipublikasi lebih dari 6 bulan untuk Desain Industri.' },
+  { num: 4, title: 'Buat akun di portal DJKI yang sesuai',         phase: 'online', body: '<b>Hak Cipta:</b> e-hakcipta.dgip.go.id &nbsp;|&nbsp; <b>Merek:</b> merek.dgip.go.id &nbsp;|&nbsp; <b>Desain Industri:</b> dgip.go.id<br/>⚠️ <b>JANGAN gunakan VPN/proxy</b> — sistem DJKI bisa error!' },
   { num: 5, title: 'Login & buat permohonan baru',                 phase: 'online', body: 'Pilih menu <b>Permohonan Baru</b>. Pilih kategori: <b>"UMK/UMKM"</b> untuk tarif lebih murah atau "Umum".' },
   { num: 6, title: 'Isi data karya & unggah dokumen',              phase: 'online', body: 'Masukkan judul, deskripsi, tanggal penciptaan, jenis ciptaan. Pastikan file <b>bebas watermark pihak ketiga</b>.' },
   { num: 7, title: 'Generate kode billing & bayar',                phase: 'online', body: 'Klik <b>Buat Billing</b>. Bayar via virtual account bank.<br/>⚠️ <b>Bayar sebelum 23.59!</b> Biaya <b>NON-REFUNDABLE</b> setelah dibayarkan.' },
-  { num: 8, title: 'Verifikasi & submit permohonan',               phase: 'online', body: 'Periksa semua data dan dokumen. Klik <b>Selesai → OK</b>. Unduh tanda terima dari dashboard DJKI.' },
+  { num: 8, title: 'Verifikasi & ajukan permohonan',               phase: 'online', body: 'Periksa semua data dan dokumen. Klik <b>Selesai → OK</b>. Unduh tanda terima dari dashboard DJKI.' },
   { num: 9, title: 'Proses pemeriksaan oleh DJKI',                 phase: 'djki',   body: '<b>Hak Cipta:</b> 9–14 hari kerja &nbsp;|&nbsp; <b>Desain Industri:</b> 6–12 bulan &nbsp;|&nbsp; <b>Merek:</b> 8–12 bulan. Pantau di dashboard DJKI.' },
   { num: 10, title: 'Terima & unduh sertifikat digital HAKI',      phase: 'djki',   body: 'DJKI kirim notifikasi via email. Unduh sertifikat dari dashboard akun. <b>Sertifikat digital sah secara hukum!</b> Buat salinan cadangan.' },
 ];
@@ -50,6 +50,10 @@ export default function DokumenPage() {
   const pct = Math.round((uploadedCount / requiredCount) * 100);
 
   function handleFile(id: number, file: File | null) {
+    if (file && file.size > 10 * 1024 * 1024) {
+      alert('Ukuran file melebihi 10 MB. Silakan pilih file yang lebih kecil.');
+      return;
+    }
     setFiles(f => ({ ...f, [id]: file }));
   }
   function toggleStep(n: number) {
@@ -64,14 +68,14 @@ export default function DokumenPage() {
         {/* Hero */}
         <div className="text-center px-4 py-5" style={{ background: 'linear-gradient(135deg,#0B2D96,#1B4FD8,#F97316)' }}>
           <div className="text-xs font-bold mb-2" style={{ color: 'rgba(255,255,255,0.8)' }}>
-            Koleksi Motif Kawung Kontemporer · Hak Cipta
+            Panduan Pendaftaran HAKI
           </div>
           <div className="rounded-xl p-3 inline-block" style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)' }}>
             <div className="font-display text-2xl font-black text-white mb-1">
               {uploadedCount} dari {requiredCount} Dokumen Siap ✅
             </div>
             <div className="text-[11px]" style={{ color: 'rgba(255,255,255,0.75)' }}>
-              {pct >= 100 ? 'Semua dokumen siap! Submit ke DJKI sekarang.' : 'Lengkapi dokumen sebelum submit ke portal DJKI'}
+              {pct >= 100 ? 'Semua dokumen siap! Ajukan ke DJKI sekarang.' : 'Lengkapi dokumen sebelum mengajukan ke portal DJKI'}
             </div>
           </div>
         </div>
@@ -91,7 +95,7 @@ export default function DokumenPage() {
         <div className="info-blue mx-4 mt-2">
           <div className="text-[11px] font-extrabold text-blue-700 mb-0.5">💡 Scope HAKIKU</div>
           <div className="text-[11px] text-slate-500 leading-relaxed">
-            HAKIKU membantu kamu <strong>mempersiapkan & mengupload dokumen</strong>. Submit akhir dilakukan langsung di portal resmi DJKI.
+            HAKIKU membantu Anda <strong>mempersiapkan & mengunggah dokumen</strong>. Pengajuan akhir dilakukan langsung di portal resmi DJKI.
           </div>
         </div>
 
@@ -99,13 +103,13 @@ export default function DokumenPage() {
         {pct >= 100 && (
           <div className="info-green mx-4">
             <div className="text-[11px] font-extrabold text-emerald-700 mb-0.5">🎉 Semua dokumen siap!</div>
-            <div className="text-[11px] text-slate-500">Kamu siap submit ke portal DJKI. Ikuti 10 langkah panduan di bawah.</div>
+            <div className="text-[11px] text-slate-500">Anda siap mengajukan ke portal DJKI. Ikuti 10 langkah panduan di bawah.</div>
           </div>
         )}
 
         {/* Document Checklist */}
         <div className="px-4 pt-3">
-          <p className="sect-label">Upload & Checklist Dokumen</p>
+          <p className="sect-label">Unggah & Checklist Dokumen</p>
         </div>
 
         {DOCS.map(doc => {
@@ -154,7 +158,7 @@ export default function DokumenPage() {
                       onClick={() => inputRefs.current[doc.id]?.click()}
                       className="px-3 py-1.5 rounded-lg text-white text-[10px] font-extrabold"
                       style={{ background: 'linear-gradient(135deg,#EA580C,#F97316)' }}>
-                      📁 Upload Dokumen
+                      📁 Unggah Dokumen
                     </button>
                   ) : (
                     <>
@@ -162,7 +166,7 @@ export default function DokumenPage() {
                         onClick={() => inputRefs.current[doc.id]?.click()}
                         className="px-3 py-1.5 rounded-lg text-white text-[10px] font-extrabold"
                         style={{ background: 'linear-gradient(135deg,#EA580C,#F97316)' }}>
-                        🔄 Ganti File
+                        🔄 Ganti Berkas
                       </button>
                       <button
                         onClick={() => handleFile(doc.id, null)}

@@ -71,7 +71,7 @@ export const EDU_MODULES: EduModule[] = [
     id: 7, sec: 'proses',
     icon: '📋', bg: '#E6F7F4',
     title: 'Alur Lengkap Pendaftaran HAKI di DJKI',
-    sub: '10 langkah step-by-step di portal resmi DJKI',
+    sub: '10 langkah panduan di portal resmi DJKI',
     dur: '15 mnt', prog: 0,
     tags: ['Belum Dimulai', 'Video', 'Panduan'],
     done: false,
