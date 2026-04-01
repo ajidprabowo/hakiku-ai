@@ -193,3 +193,120 @@ Berikan jawaban yang ramah, praktis, dan mudah dipahami orang awam. Gunakan emoj
 
   return text;
 }
+
+// ── Fungsi: Diagnosis HAKI dengan analisis AI ────────────────
+/**
+ * Analisis karya terhadap 5 kriteria penolakan HAKI
+ * Digunakan oleh: src/app/api/diagnosis/route.ts
+ */
+export async function diagnosisHAKI(
+  namaMerek: string,
+  kategori: string,
+  tujuan: string,
+  dbMatchCount: number,
+  dbHasConflict: boolean,
+  fileBase64?: string,
+  mimeType?: string
+): Promise<string> {
+  if (!GEMINI_API_KEY) {
+    throw new Error('GEMINI_API_KEY belum diset. Tambahkan di Environment Variables Vercel');
+  }
+
+  const hasFile = !!(fileBase64 && mimeType);
+
+  const prompt = `
+Kamu adalah sistem analisis HAKI (Hak Kekayaan Intelektual) Indonesia yang profesional dan akurat.
+
+DATA KARYA:
+- Nama Merek/Karya: "${namaMerek}"
+- Kategori: ${kategori}
+- Tujuan Pendaftaran: ${tujuan}
+- Hasil cek database PDKI: ditemukan ${dbMatchCount} kemiripan${dbHasConflict ? ', termasuk KONFLIK EKSAK' : ''}
+
+${hasFile ? 'Analisis juga gambar/file karya yang dilampirkan.' : ''}
+
+TUGAS: Evaluasi karya ini berdasarkan TEPAT 5 KRITERIA PENOLAKAN HAKI di Indonesia berikut.
+
+Untuk setiap kriteria, tentukan apakah karya LOLOS atau TIDAK LOLOS, dan berikan alasan spesifik.
+
+Kembalikan respons dalam format JSON MURNI (tanpa markdown, tanpa backtick) seperti ini:
+
+{
+  "kriteria": [
+    {
+      "no": 1,
+      "nama": "Kemiripan dengan Merek Terdaftar",
+      "status": "lolos" atau "tidak_lolos",
+      "alasan": "Penjelasan spesifik dan profesional mengapa lolos atau tidak lolos",
+      "detail": "Nama merek yang mirip jika ada, atau null"
+    },
+    {
+      "no": 2,
+      "nama": "Menyerupai Simbol Negara atau Lembaga Resmi",
+      "status": "lolos" atau "tidak_lolos",
+      "alasan": "Penjelasan spesifik",
+      "detail": "Nama simbol/lembaga yang dimaksud jika ada, atau null"
+    },
+    {
+      "no": 3,
+      "nama": "Menyerupai Nama Orang Terkenal",
+      "status": "lolos" atau "tidak_lolos",
+      "alasan": "Penjelasan spesifik",
+      "detail": "Nama tokoh yang dimaksud jika ada, atau null"
+    },
+    {
+      "no": 4,
+      "nama": "Sama dengan Nama Varietas Tanaman yang Dilindungi",
+      "status": "lolos" atau "tidak_lolos",
+      "alasan": "Penjelasan spesifik",
+      "detail": "Nama varietas yang dimaksud jika ada, atau null"
+    },
+    {
+      "no": 5,
+      "nama": "Mirip dengan Merek Terkenal Internasional",
+      "status": "lolos" atau "tidak_lolos",
+      "alasan": "Penjelasan spesifik",
+      "detail": "Nama merek terkenal yang dimaksud jika ada, atau null"
+    }
+  ],
+  "lolos_count": angka 0-5 (berapa kriteria yang lolos),
+  "rekomendasi_jenis_haki": "Hak Cipta" atau "Hak Cipta + Desain Industri" atau "Merek Dagang" tergantung kategori,
+  "catatan_profesional": "Satu paragraf analisis profesional dan saran konkret untuk pemohon"
+}
+
+Penting: Gunakan data database PDKI yang diberikan untuk kriteria 1. Untuk kriteria 2-5, gunakan pengetahuanmu tentang simbol negara, tokoh terkenal, varietas tanaman, dan merek internasional. Jawab dalam Bahasa Indonesia yang profesional.
+`.trim();
+
+  const parts: { text?: string; inline_data?: { mime_type: string; data: string } }[] = [];
+
+  if (hasFile) {
+    parts.push({ inline_data: { mime_type: mimeType!, data: fileBase64! } });
+  }
+  parts.push({ text: prompt });
+
+  const response = await fetch(
+    `${GEMINI_BASE_URL}/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts }],
+        generationConfig: {
+          temperature: 0.3,
+          maxOutputTokens: 2000,
+        },
+      }),
+    }
+  );
+
+  const data: GeminiResponse = await response.json();
+
+  if (!response.ok || data.error) {
+    throw new Error(data.error?.message ?? `API error: ${response.status}`);
+  }
+
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) throw new Error('Respons kosong dari AI');
+
+  return text;
+}
