@@ -7,7 +7,7 @@
 // API key aman karena hanya ada di server
 // ══════════════════════════════════════════════════════════════
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL ?? 'gemini-3-flash-preview';
+const GEMINI_MODEL = process.env.GEMINI_MODEL ?? 'gemini-2.0-flash';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY ?? '';
 
 // Base URL Gemini API
