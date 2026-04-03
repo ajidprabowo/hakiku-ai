@@ -310,3 +310,69 @@ Penting: Gunakan data database PDKI yang diberikan untuk kriteria 1. Untuk krite
 
   return text;
 }
+
+// ── Fungsi: Generate Surat Pernyataan Kepemilikan Desain Industri ──
+export async function generateSuratPernyataan(data: {
+  namaPemohon: string;
+  kewarganegaraan?: string;
+  namaBadanHukum?: string;
+  alamat: string;
+  tanggal: string;
+  namaDesain: string;
+  jenisPemohon: 'perorangan' | 'badan_hukum';
+}): Promise<string> {
+  if (!GEMINI_API_KEY) {
+    throw new Error('GEMINI_API_KEY belum diset. Tambahkan di Environment Variables Vercel');
+  }
+
+  const isPerorang = data.jenisPemohon === 'perorangan';
+  const namaPenandatangan = isPerorang ? data.namaPemohon : data.namaBadanHukum ?? data.namaPemohon;
+
+  const prompt = `
+Kamu adalah sistem generate dokumen legal HAKI Indonesia yang sangat presisi.
+Buat teks "SURAT PERNYATAAN KEPEMILIKAN DESAIN INDUSTRI" resmi sesuai format DJKI Indonesia.
+
+DATA INPUT:
+- Nama Pemohon: ${data.namaPemohon}
+- Jenis Pemohon: ${isPerorang ? 'Perorangan' : 'Badan Hukum'}
+${!isPerorang ? `- Nama Badan Hukum: ${data.namaBadanHukum}` : `- Kewarganegaraan: ${data.kewarganegaraan ?? 'Indonesia'}`}
+- Alamat: ${data.alamat}
+- Tanggal: ${data.tanggal}
+- Nama Desain Industri: ${data.namaDesain}
+
+Hasilkan HANYA konten surat dalam format JSON murni (tanpa backtick, tanpa markdown):
+
+{
+  "pihakYangMenyatakan": "${isPerorang ? data.namaPemohon : (data.namaBadanHukum ?? data.namaPemohon)}",
+  "kewarganegaraan": "${isPerorang ? (data.kewarganegaraan ?? 'Indonesia') : ''}",
+  "namaBadanHukum": "${!isPerorang ? (data.namaBadanHukum ?? '') : ''}",
+  "alamat": "${data.alamat}",
+  "namaDesain": "${data.namaDesain}",
+  "tanggal": "${data.tanggal}",
+  "isPerorang": ${isPerorang},
+  "namaPenandatangan": "${namaPenandatangan}",
+  "pernyataan1": "Satu kalimat pernyataan formal bahwa desain industri berjudul '${data.namaDesain}' adalah milik ${isPerorang ? 'saya' : 'kami'}, dimana desain industri tersebut adalah desain yang memiliki nilai kebaruan dan tidak sama dengan pengungkapan desain industri sebelumnya.",
+  "pernyataan2": "Satu kalimat pernyataan formal bahwa desain industri pada angka 1 tersebut di atas tidak pernah dan tidak dalam sengketa, baik pidana dan/atau perdata di peradilan."
+}
+`.trim();
+
+  const response = await fetch(
+    `${GEMINI_BASE_URL}/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.1, maxOutputTokens: 1000 },
+      }),
+    }
+  );
+
+  const result: GeminiResponse = await response.json();
+  if (!response.ok || result.error) {
+    throw new Error(result.error?.message ?? `API error: ${response.status}`);
+  }
+  const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) throw new Error('Respons kosong dari AI');
+  return text;
+}
